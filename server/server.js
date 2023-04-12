@@ -1,12 +1,18 @@
 require("dotenv").config();
-const express = require("express")
-
-const app = express() 
+const express = require("express");
+const morgan = require("morgan");
+const app = express();
+ 
 
 app.use((req, res, next) => {
     console.log("yeah our middelware");
     next();
-})
+});
+
+app.use((req, res, next) => {
+    console.log("This is our second middelware");
+    next();
+});
 
 app.get("/api/v1/concerts", (req, res) => {
  res.status(404).json({
@@ -29,6 +35,7 @@ app.get("/api/v1/concerts/:concertid", (req, res) => {
 app.post("/api/v1/concerts", (req, res) => {
     console.log(req);
 });
+
 
 const port = process.env.PORT || 3001;
 app.listen(port, () => {
