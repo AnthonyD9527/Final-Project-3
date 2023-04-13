@@ -15,16 +15,21 @@ app.use((req, res, next) => {
 //Get all concerts
 app.get("/api/v1/concerts", async (req, res) => {
 
- const results = await db.query("select * from concerts")
- ;
- console.log(results);
- res.status(200).json({
-    status: "success",
-    data: {
-        concert: ["Oldies", "Rap", "R&B"]
+    try{
+        const results = await db.query("select * from concerts")
+        ;
+        console.log(results);
+        res.status(200).json({
+             status: "success",
+            results: results.rows.length,
+             data: {
+            concerts: results.rows
 
-    },
- });
+            },
+        });
+ } catch (err) {
+    console.log(err);
+ }
 });
 
 
