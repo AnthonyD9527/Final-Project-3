@@ -11,7 +11,7 @@ app.use((req, res, next) => {
     console.log("This is our second middelware");
     next();
 });
-
+//ROUTES
 //Get all concerts
 app.get("/api/v1/concerts", async (req, res) => {
 
@@ -34,27 +34,48 @@ app.get("/api/v1/concerts", async (req, res) => {
 
 
 // Get a single Concert
-app.get("/api/v1/concerts/:id", (req, res) => {
-    console.log(req.params);
+app.get("/api/v1/concerts/:id", async (req, res) => {
+    console.log(req.params.id);
 
-    res.status(200).json({
-        status: "success",
-        data: {
-            concert: "Oldies"
-        }
-    })
+    try {
+        const results = await db.query( "select * from concerts where id = $1", [
+            req.params.id, ]);
+
+        res.status(200).json({
+            status: "success",
+            data: {
+                concert: "results.rows[0],"
+            },
+        });
+        
+        } catch (err){
+            console.log(err)
+    }
+
+
 } ) ;
 
 // How to create a single listing for Concert
 
-app.post("/api/v1/concerts", (req, res) => {
-    console.log(req);
-    res.status(201).json({
-        status: "success",
-        data: {
-            concert: "Oldies"
+app.post("/api/v1/concerts",async (req, res) => {
+    console.log(req.body);
+
+    try {
+        const results = await db.query("INSERT INTO concerts (name,location , price_range) values ($1, $2,$3) returning *",[req.body.
+            name, req.body.location, req.body.price_range])
+            console.log(results)
+            res.status(201).json({
+                status: "success",
+                data: {
+                    concert: results.rows[0],
+                },
+            });
+
+     } catch (err) {
+        console.log(err)
+
         }
-    })
+   
 } ) ;
 
 // Update 
@@ -79,7 +100,7 @@ app.delete("/api/v1/concerts/:id", (req, res) => {
     })
 } ) ;
 
-
+//^^^^^^^^^^^^^^^^^^ ROUTES ^^^^^^^^^^^^^^^^^//
 
 const port = process.env.PORT || 3001;
 app.listen(port, () => {
