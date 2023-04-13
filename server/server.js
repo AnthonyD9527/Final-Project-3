@@ -80,20 +80,40 @@ app.post("/api/v1/concerts",async (req, res) => {
 
 // Update 
 
-app.put("/api/v1/concerts/:id" , (req, res) => {
-console.log(req.params.id);
-console.log(req.body);
-res.status(200).json({
-    status: "success",
-    data: {
-        concert: "Oldies"
+app.put("/api/v1/concerts/:id" ,  async (req, res) => {
+
+    try {
+        const results = await db.query
+        ("UPDATE concerts SET name = $1, location = $2, price_range = $3 where id = $4 returning *",
+         [req.body.name, req.body.
+        location, req.body.price_range, req.params.id]
+         );
+       
+
+         res.status(200).json({
+            status: "success",
+            data: {
+                concert: results.rows[0]
+            },
+        });
+
+    } catch (err){
+        console.log(err)
     }
-})
+ console.log(req.params.id);
+ console.log(req.body);
+
 } ) ;
 
 // Delete
 
-app.delete("/api/v1/concerts/:id", (req, res) => {
+app.delete("/api/v1/concerts/:id", async (req, res) => {
+
+    try {
+
+    } catch(err) {
+        
+    }
     res.status(204).json({
         status: "success",
         
