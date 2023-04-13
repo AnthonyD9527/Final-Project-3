@@ -110,14 +110,17 @@ app.put("/api/v1/concerts/:id" ,  async (req, res) => {
 app.delete("/api/v1/concerts/:id", async (req, res) => {
 
     try {
+        const results = db.query ("DELETE FROM concerts where id = $1 ", [req.params.id,
+        ]);
+        res.status(204).json({
+            status: "success",
+            
+        });
 
     } catch(err) {
-        
+        console.log(err);
     }
-    res.status(204).json({
-        status: "success",
-        
-    })
+  
 } ) ;
 
 //^^^^^^^^^^^^^^^^^^ ROUTES ^^^^^^^^^^^^^^^^^//
